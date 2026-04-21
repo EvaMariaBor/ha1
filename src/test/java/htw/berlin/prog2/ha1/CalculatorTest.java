@@ -109,5 +109,23 @@ class CalculatorTest {
     }
 
 
+    @Test
+    @DisplayName("should add the last typed in number every time pressing + to the new result")
+    void testRepeatedEqualsAppliesOperationMultipleTimes() {
+        Calculator calc = new Calculator();
+
+        calc.pressDigitKey(5);
+        calc.pressBinaryOperationKey("+");
+        calc.pressDigitKey(6);
+        calc.pressEqualsKey();
+        calc.pressEqualsKey();
+
+        String expected = "17";
+        String actual = calc.readScreen();
+
+        assertEquals(expected, actual);
+    }
+
+
 }
 
