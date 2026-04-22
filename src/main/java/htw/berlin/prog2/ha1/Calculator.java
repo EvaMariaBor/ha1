@@ -14,6 +14,8 @@ public class Calculator {
 
     private String latestOperation = "";
 
+    private double lastOperand;
+
     /**
      * @return den aktuellen Bildschirminhalt als String
      */
@@ -62,6 +64,7 @@ public class Calculator {
     public void pressBinaryOperationKey(String operation)  {
         latestValue = Double.parseDouble(screen);
         latestOperation = operation;
+        lastOperand = 0.0;
     }
 
     /**
@@ -118,13 +121,31 @@ public class Calculator {
      * und das Ergebnis direkt angezeigt.
      */
     public void pressEqualsKey() {
+
+        if (latestOperation.equals("")) {
+            return;
+        }
+
+        double currentValue = Double.parseDouble(screen);
+
+        if (lastOperand == 0) {
+            lastOperand = currentValue;
+        }
+
         var result = switch(latestOperation) {
             case "+" -> latestValue + Double.parseDouble(screen);
             case "-" -> latestValue - Double.parseDouble(screen);
             case "x" -> latestValue * Double.parseDouble(screen);
             case "/" -> latestValue / Double.parseDouble(screen);
+            case "+" -> latestValue + lastOperand;
+            case "-" -> latestValue - lastOperand;
+            case "x" -> latestValue * lastOperand;
+            case "/" -> latestValue / lastOperand;
             default -> throw new IllegalArgumentException();
         };
+
+        latestValue = result;
+
         screen = Double.toString(result);
         if(screen.equals("Infinity")) screen = "Error";
         if(screen.endsWith(".0")) screen = screen.substring(0,screen.length()-2);
